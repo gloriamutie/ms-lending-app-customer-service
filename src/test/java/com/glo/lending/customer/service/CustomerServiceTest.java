@@ -1,5 +1,6 @@
 package com.glo.lending.customer.service;
 
+import com.glo.lending.customer.components.CustomerCacheService;
 import com.glo.lending.customer.exception.CustomerNotFoundException;
 import com.glo.lending.customer.model.dto.*;
 import com.glo.lending.customer.model.enums.CustomerStatus;

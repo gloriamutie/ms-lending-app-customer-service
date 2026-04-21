@@ -1,5 +1,6 @@
 package com.glo.lending.customer.service;
 
+import com.glo.lending.customer.components.CustomerCacheService;
 import com.glo.lending.customer.model.dto.LimitReservationRequest;
 import com.glo.lending.customer.dblayer.entities.LimitReservation;
 import com.glo.lending.customer.dblayer.repo.CustomerLoanLimitRepository;

@@ -1,4 +1,4 @@
-package com.glo.lending.customer.service;
+package com.glo.lending.customer.components;
 
 import com.glo.lending.customer.config.CacheConfig;
 import com.glo.lending.customer.dblayer.entities.Customer;
