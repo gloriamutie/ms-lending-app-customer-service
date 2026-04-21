@@ -3,6 +3,7 @@ package com.glo.lending.customer.controller;
 import com.glo.lending.customer.model.dto.*;
 import com.glo.lending.customer.model.enums.CustomerStatus;
 import com.glo.lending.customer.dblayer.entities.CustomerFinancialHistory;
+import com.glo.lending.customer.service.CustomerService;
 import com.glo.lending.customer.service.serviceImpl.CustomerServiceImpl;
 import com.glo.lending.customer.service.LimitReservationService;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class CustomerController {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
-    private final CustomerServiceImpl customerService;
+    private final CustomerService customerService;
     private final LimitReservationService limitReservationService;
 
     @PostMapping
