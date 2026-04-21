@@ -11,6 +11,7 @@ import com.glo.lending.customer.dblayer.entities.CustomerLoanLimit;
 import com.glo.lending.customer.dblayer.repo.CustomerFinancialHistoryRepository;
 import com.glo.lending.customer.dblayer.repo.CustomerLoanLimitRepository;
 import com.glo.lending.customer.dblayer.repo.CustomerRepository;
+import com.glo.lending.customer.service.serviceImpl.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -45,7 +46,7 @@ class CustomerServiceTest {
     @Mock private CustomerCacheService cacheService;
     @Mock private KafkaTemplate<String, Object> kafkaTemplate;
 
-    @InjectMocks private CustomerService customerService;
+    @InjectMocks private CustomerServiceImpl customerService;
 
     private Customer customer;
     private UUID customerId;

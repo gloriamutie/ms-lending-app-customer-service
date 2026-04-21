@@ -1,5 +1,6 @@
 package com.glo.lending.customer.dblayer.entities;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
 @Data
 @Table("limit_reservations")
 public class LimitReservation {

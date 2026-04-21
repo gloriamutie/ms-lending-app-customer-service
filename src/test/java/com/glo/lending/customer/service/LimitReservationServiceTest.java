@@ -6,6 +6,7 @@ import com.glo.lending.customer.dblayer.entities.CustomerLoanLimit;
 import com.glo.lending.customer.dblayer.entities.LimitReservation;
 import com.glo.lending.customer.dblayer.repo.CustomerLoanLimitRepository;
 import com.glo.lending.customer.dblayer.repo.LimitReservationRepository;
+import com.glo.lending.customer.service.serviceImpl.LimitReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ class LimitReservationServiceTest {
     @Mock private LimitReservationRepository reservationRepository;
     @Mock private CustomerCacheService cacheService;
 
-    @InjectMocks private LimitReservationService limitReservationService;
+    @InjectMocks private LimitReservationServiceImpl limitReservationService;
 
     private UUID customerId;
     private LimitReservationRequest request;
