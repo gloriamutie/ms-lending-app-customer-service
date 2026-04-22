@@ -32,7 +32,7 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
-    private static final String CUSTOMER_EVENTS_TOPIC = "lending.customer.events";
+    private static final String CUSTOMER_EVENTS_TOPIC = "lendingCustomerEventsv2";
 
     private final CustomerRepository customerRepository;
     private final CustomerLoanLimitRepository loanLimitRepository;

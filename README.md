@@ -29,29 +29,30 @@ Manages customer profiles, loan limits, financial history, and idempotent limit 
 cd ms-lending-app-customer-service
 
 # Build
-mvn clean compile
+./mvnw clean compile
 
 # Run
-mvn spring-boot:run
+./mvnw spring-boot:run
 
 # Run tests
-mvn clean test
+./mvnw clean test
 
 # Generate coverage report
-mvn clean test jacoco:report
+./mvnw clean test jacoco:report
 ```
 
-The service starts on **port 8082** and Flyway auto-creates all tables on first startup.
+The service starts on **port 8083** and Flyway auto-creates all tables on first startup.
 
 ## Configuration
 
-| Property                  | Default                                               |
-|---------------------------|-------------------------------------------------------|
-| `server.port`             | `8082`                                                |
-| `spring.r2dbc.url`        | `r2dbc:postgresql://localhost:5432/lending_customer_db`|
-| `app.security.api-key`    | `customer-service-api-key-2024`                       |
-| `spring.kafka.bootstrap-servers` | `localhost:9092`                               |
-| `spring.cache.type`       | `simple`                                              |
+| Property                  | Default                                                |
+|---------------------------|--------------------------------------------------------|
+| `server.port`             | `8083`                                                 |
+| `spring.r2dbc.url`        | `r2dbc:postgresql://localhost:5432/lending_customer_db` |
+| `spring.datasource.url`   | `jdbc:postgresql://localhost:5432/lending_customer_db` |
+| `app.security.api-key`    | `customer-service-api-key-2024`                        |
+| `spring.kafka.bootstrap-servers` | `localhost:9092`                                |
+| `spring.cache.type`       | `simple`                                               |
 
 ## Database Schema
 
@@ -108,7 +109,7 @@ Topic: `lending.customer.events` (6 partitions, key = `customerId`)
 ## Example Request — Create Customer
 
 ```bash
-curl -X POST http://localhost:8082/api/v1/customers \
+curl -X POST http://localhost:8083/api/v1/customers \
   -H "Content-Type: application/json" \
   -H "X-API-KEY: customer-service-api-key-2024" \
   -d '{
@@ -153,3 +154,32 @@ src/main/java/com/glo/lending/customer/
     └── CustomerMapper.java
 ```
 
+## Troubleshooting
+
+### Flyway did not migrate
+
+- Confirm DB name is `lending_customer_db` in both `spring.r2dbc.url` and `spring.datasource.url`.
+- Clean and rebuild to refresh classpath resources:
+
+```bash
+./mvnw clean package
+./mvnw spring-boot:run
+```
+
+- Verify migration history in PostgreSQL:
+
+```sql
+SELECT installed_rank, version, description, success
+FROM flyway_schema_history
+ORDER BY installed_rank;
+```
+
+### Kafka not initializing
+
+- Ensure Kafka broker is reachable at `localhost:9092`.
+- Service publishes to topic `lendingCustomerEventsv2`.
+- If topic auto-creation is disabled in your broker, create it manually:
+
+```bash
+kafka-topics --bootstrap-server localhost:9092 --create --topic lending.customer.events --partitions 2 --replication-factor 1
+```
