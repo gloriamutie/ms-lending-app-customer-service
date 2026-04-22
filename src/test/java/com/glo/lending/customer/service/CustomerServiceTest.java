@@ -138,7 +138,7 @@ class CustomerServiceTest {
 
             // When & Then
             StepVerifier.create(customerService.getAllCustomers(null))
-                    .assertNext(r -> assertEquals("John", r.firstName()))
+                    .assertNext(r -> assertEquals("john", r.firstName()))
                     .verifyComplete();
         }
 

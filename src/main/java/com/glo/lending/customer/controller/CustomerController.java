@@ -4,8 +4,6 @@ import com.glo.lending.customer.model.dto.*;
 import com.glo.lending.customer.model.enums.CustomerStatus;
 import com.glo.lending.customer.dblayer.entities.CustomerFinancialHistory;
 import com.glo.lending.customer.service.CustomerService;
-import com.glo.lending.customer.service.serviceImpl.CustomerServiceImpl;
-import com.glo.lending.customer.service.LimitReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +23,6 @@ public class CustomerController {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
     private final CustomerService customerService;
-    private final LimitReservationService limitReservationService;
 
     @PostMapping
     public Mono<ResponseEntity<CustomerResponse>> createCustomer(@Valid @RequestBody final CreateCustomerRequest request) {
@@ -71,20 +68,6 @@ public class CustomerController {
         return Mono.just(ResponseEntity.ok(customerService.getFinancialHistory(customerId)));
     }
 
-    /** Called by Loan Service saga to reserve customer limit. */
-    @PutMapping("/{customerId}/loan-limits/reserve")
-    public Mono<ResponseEntity<Void>> reserveLimit(@PathVariable final UUID customerId,
-                                                    @Valid @RequestBody final LimitReservationRequest request) {
-        log.info("PUT /api/v1/customers/{}/loan-limits/reserve", customerId);
-        return limitReservationService.reserveLimit(customerId, request).then(Mono.just(ResponseEntity.ok().build()));
-    }
 
-    /** Called by Loan Service saga compensation to release customer limit. */
-    @PutMapping("/{customerId}/loan-limits/release")
-    public Mono<ResponseEntity<Void>> releaseLimit(@PathVariable final UUID customerId,
-                                                    @Valid @RequestBody final LimitReservationRequest request) {
-        log.info("PUT /api/v1/customers/{}/loan-limits/release", customerId);
-        return limitReservationService.releaseLimit(customerId, request).then(Mono.just(ResponseEntity.ok().build()));
-    }
 }
 

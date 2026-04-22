@@ -13,7 +13,7 @@ public final class CustomerMapper {
     private CustomerMapper() {
     }
 
-    public static Customer toEntity(final CreateCustomerRequest req) {
+    public static Customer toEntity( CreateCustomerRequest req) {
         return Customer.builder()
                 .firstName(req.getFirstName())
                 .lastName(req.getLastName())
@@ -28,13 +28,13 @@ public final class CustomerMapper {
 
     }
 
-    public static CustomerResponse toResponse(final Customer c) {
+    public static CustomerResponse toResponse( Customer c) {
         return new CustomerResponse(c.getId(), c.getFirstName(), c.getLastName(), c.getEmail(),
                 c.getPhoneNumber(), c.getIdNumber(), c.getDateOfBirth(), c.getStatus(),
                 c.getCreatedAt(), c.getUpdatedAt());
     }
 
-    public static LoanLimitResponse toLoanLimitResponse(final CustomerLoanLimit l) {
+    public static LoanLimitResponse toLoanLimitResponse( CustomerLoanLimit l) {
         return new LoanLimitResponse(l.getId(), l.getCustomerId(), l.getMaxLoanAmount(),
                 l.getAvailableAmount(), l.getCreditScore(), l.getRiskCategory(), l.getLastAssessedAt());
     }

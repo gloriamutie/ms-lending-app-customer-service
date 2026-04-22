@@ -5,6 +5,7 @@ import com.glo.lending.customer.dblayer.entities.Customer;
 import com.glo.lending.customer.dblayer.entities.CustomerLoanLimit;
 import com.glo.lending.customer.dblayer.repo.CustomerLoanLimitRepository;
 import com.glo.lending.customer.dblayer.repo.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 
+@RequiredArgsConstructor
 @Service
 public class CustomerCacheService {
 
@@ -24,19 +26,11 @@ public class CustomerCacheService {
     private final CustomerLoanLimitRepository loanLimitRepository;
     private final CacheManager cacheManager;
 
-    public CustomerCacheService(final CustomerRepository customerRepository,
-                                final CustomerLoanLimitRepository loanLimitRepository,
-                                final CacheManager cacheManager) {
-        this.customerRepository = customerRepository;
-        this.loanLimitRepository = loanLimitRepository;
-        this.cacheManager = cacheManager;
-    }
-
 
     public Mono<Customer> getCustomerById(final UUID customerId) {
-        final Cache cache = cacheManager.getCache(CacheConfig.CACHE_CUSTOMERS);
+         Cache cache = cacheManager.getCache(CacheConfig.CACHE_CUSTOMERS);
         if (cache != null) {
-            final Customer cached = cache.get(customerId, Customer.class);
+             Customer cached = cache.get(customerId, Customer.class);
             if (cached != null) {
                 log.debug("Cache HIT for customer: {}", customerId);
                 return Mono.just(cached);
@@ -51,7 +45,7 @@ public class CustomerCacheService {
                 });
     }
 
-    public Mono<CustomerLoanLimit> getLoanLimit(final UUID customerId) {
+    public Mono<CustomerLoanLimit> getLoanLimit( UUID customerId) {
         final Cache cache = cacheManager.getCache(CacheConfig.CACHE_LOAN_LIMITS);
         if (cache != null) {
             final CustomerLoanLimit cached = cache.get(customerId, CustomerLoanLimit.class);

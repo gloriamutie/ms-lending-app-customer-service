@@ -32,6 +32,7 @@ public class CacheConfig {
 
         );
 
+        // Set TTL for customer cache, refresh cache after every 10 mins
         manager.registerCustomCache(CACHE_CUSTOMERS,
                 Caffeine.newBuilder()
                         .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -39,6 +40,7 @@ public class CacheConfig {
                         .build()
         );
 
+        // Set TTL for customerLoanLimits cache, refresh cache after every 5 mins
         manager.registerCustomCache(CACHE_LOAN_LIMITS,
                 Caffeine.newBuilder()
                         .expireAfterWrite(5, TimeUnit.MINUTES)
