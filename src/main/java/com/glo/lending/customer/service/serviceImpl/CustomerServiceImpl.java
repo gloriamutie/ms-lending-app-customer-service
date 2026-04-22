@@ -32,7 +32,7 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
-    private static final String CUSTOMER_EVENTS_TOPIC = "lendingCustomerEvents";
+    private static final String CUSTOMER_EVENTS_TOPIC = "lending.customer.events";
 
     private final CustomerRepository customerRepository;
     private final CustomerLoanLimitRepository loanLimitRepository;
@@ -84,7 +84,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-    // trigger event after editing limit
     @Override
     public Mono<LoanLimitResponse> setLoanLimit( UUID customerId,  LoanLimitRequest request) {
         log.info("Setting loan limit for customer: {}", customerId);
@@ -103,10 +102,14 @@ public class CustomerServiceImpl implements CustomerService {
                 )
                 .doOnSuccess(saved -> {
                     cacheService.evictCustomer(customerId);
-                    kafkaTemplate.send(CUSTOMER_EVENTS_TOPIC, customerId.toString(),
-                            Map.of("eventType", "LIMIT_UPDATED", "customerId", customerId,
-                                    "maxLoanAmount", saved.getMaxLoanAmount()));
-                    log.info("Loan limit set: customerId={}, max={}", customerId, saved.getMaxLoanAmount());
+                    try {
+                        kafkaTemplate.send(CUSTOMER_EVENTS_TOPIC, customerId.toString(),
+                                Map.of("eventType", "LIMIT_UPDATED", "customerId", customerId,
+                                        "maxLoanAmount", saved.getMaxLoanAmount()));
+                        log.info("Published LIMIT_UPDATED event: customerId={}, max={}, topic={}", customerId, saved.getMaxLoanAmount(), CUSTOMER_EVENTS_TOPIC);
+                    } catch (Exception e) {
+                        log.error("Failed to publish Kafka event for customer: {}", customerId, e);
+                    }
                 })
                 .map(CustomerMapper::toLoanLimitResponse);
     }

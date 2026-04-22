@@ -4,16 +4,16 @@ Manages customer profiles, loan limits, financial history, and idempotent limit 
 
 ## Tech Stack
 
-| Component        | Technology                              |
-|------------------|-----------------------------------------|
-| Framework        | Spring Boot 3.4.4 / Spring WebFlux      |
-| Language         | Java 21                                 |
-| Database         | PostgreSQL (R2DBC — reactive)           |
-| Migrations       | Flyway (runs over JDBC at startup)      |
-| Caching          | Spring Cache (`CaffeineCacheManager`) |
+| Component        | Technology                                        |
+|------------------|---------------------------------------------------|
+| Framework        | Spring Boot 3.4.8 / Spring WebFlux                |
+| Language         | Java 21                                           |
+| Database         | PostgreSQL (R2DBC — reactive)                     |
+| Migrations       | Flyway (runs over JDBC at startup)                |
+| Caching          | Spring Cache (`CaffeineCacheManager`)             |
 | Event Broker     | Apache Kafka (produces `lending.customer.events`) |
-| Security         | API Key (`X-API-KEY` header)            |
-| Testing          | JUnit 5 + Mockito + StepVerifier        |
+| Security         | API Key (`X-API-KEY` header)                      |
+| Testing          | JUnit 5 + Mockito + StepVerifier                  |
 
 ## Prerequisites
 
