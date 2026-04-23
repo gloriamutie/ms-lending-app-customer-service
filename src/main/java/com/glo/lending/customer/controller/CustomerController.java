@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -36,10 +37,13 @@ public class CustomerController {
         return customerService.getCustomerById(customerId).map(r -> ResponseEntity.ok().body(r));
     }
 
-    @GetMapping
-    public Mono<ResponseEntity<Flux<CustomerResponse>>> getAllCustomers(@RequestParam(required = false) final CustomerStatus status) {
+    /**
+     * Streams all customers as NDJSON. Use {@code Accept: application/x-ndjson}.
+     */
+    @GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
+    public Flux<CustomerResponse> getAllCustomers(@RequestParam(required = false) final CustomerStatus status) {
         log.info("GET /api/v1/customers — status={}", status);
-        return Mono.just(ResponseEntity.ok(customerService.getAllCustomers(status)));
+        return customerService.getAllCustomers(status);
     }
 
     @PutMapping("/{customerId}")
@@ -62,12 +66,9 @@ public class CustomerController {
         return customerService.getLoanLimit(customerId).map(r -> ResponseEntity.ok().body(r));
     }
 
-    @GetMapping("/{customerId}/financial-history")
-    public Mono<ResponseEntity<Flux<CustomerFinancialHistory>>> getFinancialHistory(@PathVariable final UUID customerId) {
+    @GetMapping(value = "/{customerId}/financial-history", produces = MediaType.APPLICATION_NDJSON_VALUE)
+    public Flux<CustomerFinancialHistory> getFinancialHistory(@PathVariable final UUID customerId) {
         log.info("GET /api/v1/customers/{}/financial-history", customerId);
-        return Mono.just(ResponseEntity.ok(customerService.getFinancialHistory(customerId)));
+        return customerService.getFinancialHistory(customerId);
     }
-
-
 }
-

@@ -27,12 +27,16 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaProducerConfig.class);
-    private static final String CUSTOMER_EVENTS_TOPIC = "lendingCustomerEvents";
-    private static final int TOPIC_PARTITIONS = 2;
     private static final int TOPIC_REPLICATION_FACTOR = 1;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Value("${app.kafka.topic.loan-events}")
+    private String customerEventsTopic;
+
+    @Value("${app.kafka.topic.partitions}")
+    private int topicPartitions;
 
     /**
      * Produces an idempotent Kafka producer factory.
@@ -61,15 +65,14 @@ public class KafkaProducerConfig {
     }
 
     /**
-     * Auto-creates the lending.customer.events topic on startup.
+     * Auto-creates the customer events topic on startup using values from application.properties.
      */
     @Bean
     public NewTopic customerEventsTopic() {
-        log.info("Creating Kafka topic: {}", CUSTOMER_EVENTS_TOPIC);
-        return TopicBuilder.name(CUSTOMER_EVENTS_TOPIC)
-                .partitions(TOPIC_PARTITIONS)
+        log.info("Creating Kafka topic: {} with {} partitions", customerEventsTopic, topicPartitions);
+        return TopicBuilder.name(customerEventsTopic)
+                .partitions(topicPartitions)
                 .replicas(TOPIC_REPLICATION_FACTOR)
                 .build();
     }
 }
-
