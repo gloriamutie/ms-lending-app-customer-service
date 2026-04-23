@@ -46,19 +46,6 @@ CREATE TABLE IF NOT EXISTS customer_financial_history (
     recorded_at     TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Idempotent Limit Reservations (used by Loan Creation Saga)
-CREATE TABLE IF NOT EXISTS limit_reservations (
-    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    customer_id     UUID           NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
-    loan_id         UUID           NOT NULL,
-    idempotency_key VARCHAR(100)   NOT NULL,
-    amount          NUMERIC(15,2)  NOT NULL,
-    operation       VARCHAR(10)    NOT NULL,
-    created_at      TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT chk_operation CHECK (operation IN ('RESERVE', 'RELEASE')),
-    CONSTRAINT uq_reservation_key_op UNIQUE (idempotency_key, operation)
-);
 
 CREATE INDEX idx_customers_email ON customers(email);
 CREATE INDEX idx_customers_id_number ON customers(id_number);
